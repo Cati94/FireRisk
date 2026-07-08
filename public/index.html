@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FireRisk</title>
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="map-region" aria-label="FireRisk map">
+        <div id="map" class="map"></div>
+        <div id="mapFallback" class="map-fallback">
+          <svg id="fallbackMapSvg" class="fallback-map-svg" role="img" aria-label="Offline operational map"></svg>
+          <div class="fallback-map-label">
+            <strong>Local map</strong>
+            <span>Operational layers are drawn locally; external tiles are optional.</span>
+          </div>
+        </div>
+      </section>
+      <aside class="panel" aria-label="Provider status">
+        <h1>FireRisk</h1>
+        <div class="summary">
+          <span id="mode">Loading</span>
+          <span id="updated">-</span>
+        </div>
+        <section class="weather-panel" aria-label="Weather">
+          <h2>Meteorologia</h2>
+          <div id="weatherSummary" class="weather-summary"></div>
+        </section>
+        <section class="simulation-panel" aria-label="Simulation">
+          <div class="section-heading">
+            <h2>Simulacao</h2>
+            <label class="toggle">
+              <input id="simulationToggle" type="checkbox" checked>
+              <span>Mapa</span>
+            </label>
+          </div>
+          <div class="horizon-controls" id="horizonControls">
+            <button type="button" data-horizon="30">30 min</button>
+            <button type="button" data-horizon="60" class="active">1 h</button>
+            <button type="button" data-horizon="180">3 h</button>
+            <button type="button" data-horizon="360">6 h</button>
+            <button type="button" data-horizon="720">12 h</button>
+          </div>
+          <div id="simulationSummary" class="simulation-summary"></div>
+        </section>
+        <section class="decision-panel" aria-label="Decision support">
+          <div class="section-heading">
+            <h2>Apoio a decisao</h2>
+            <button id="decisionRefresh" type="button" class="small-button">Atualizar</button>
+          </div>
+          <p class="advisory">Apoios analiticos, nao ordens operacionais.</p>
+          <div id="aiSummary" class="ai-summary"></div>
+          <div id="decisionSummary" class="decision-summary"></div>
+        </section>
+        <section class="recovery-panel" aria-label="Post-fire and prevention">
+          <div class="tabs" role="tablist" aria-label="Recovery and prevention">
+            <button id="postfireTab" type="button" class="active" data-tab="postfire">Pos-incendio</button>
+            <button id="preventionTab" type="button" data-tab="prevention">Prevencao</button>
+          </div>
+          <div id="postfirePanel" class="tab-panel"></div>
+          <div id="preventionPanel" class="tab-panel" hidden></div>
+        </section>
+        <div id="providers" class="providers"></div>
+      </aside>
+    </main>
+    <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

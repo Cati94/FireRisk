@@ -1,0 +1,25 @@
+{
+  "project": "FireRisk",
+  "packagePurpose": "Codex handoff package for modular wildfire decision-support platform",
+  "version": "1.0.0",
+  "language": "pt-PT",
+  "recommendedFirstPrompt": "prompts/00_MASTER_PROMPT.md",
+  "recommendedFirstExecution": "prompts/01_PHASE_0_1_FOUNDATION.md",
+  "rules": [
+    "Do not implement all phases at once",
+    "Do not commit real API keys",
+    "Keep external-provider failures non-fatal",
+    "Prefer TypeScript where project already uses TypeScript",
+    "Keep simulations and recommendations explicitly uncertain and explainable"
+  ],
+  "phases": [
+    "Fase 0 - Auditoria e estabilização",
+    "Fase 1 - Providers e camadas",
+    "Fase 2 - Meteorologia",
+    "Fase 3 - Simulação preditiva",
+    "Fase 4 - Apoio à decisão",
+    "Fase 5 - IA FireRisk",
+    "Fase 6 - Pós-incêndio e prevenção",
+    "Fase 7 - Revisão e hardening"
+  ]
+}

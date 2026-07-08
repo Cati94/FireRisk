@@ -1,0 +1,17 @@
+{
+  "name": "firerisk-foundation",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "FireRisk Phase 0/1 foundation with resilient providers and mockable API endpoints.",
+  "scripts": {
+    "install:check": "node --version",
+    "dev": "node src/server.mjs",
+    "start": "node src/server.mjs",
+    "test": "node --test",
+    "build": "node src/check.mjs && node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
