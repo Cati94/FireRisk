@@ -24,7 +24,7 @@ Provides Personal Weather Station (PWS) observations.
 4. Generate an API Key from your Weather Underground developer account.
 5. Configure:
 
-```env
+```.env.example
 WEATHERUNDERGROUND_API_KEY=your_api_key
 WEATHERUNDERGROUND_STATION_ID=your_station_id
 ```
@@ -49,7 +49,7 @@ If IPMA introduces authenticated services in the future, obtain credentials thro
 
 Configuration example:
 
-```env
+```.env.example
 IPMA_BASE_URL=https://api.ipma.pt/open-data/
 ```
 
@@ -64,7 +64,7 @@ FireRisk uses NASA FIRMS hotspot data (MODIS and VIIRS).
 3. Generate a FIRMS Map Key.
 4. Configure:
 
-```env
+```.env.example
 FIRMS_MAP_KEY=your_firms_map_key
 ```
 
@@ -89,7 +89,7 @@ If restricted services are needed:
 2. Request API or data access.
 3. Configure the endpoint:
 
-```env
+```.env.example
 ICNF_OCCURRENCES_URL=https://...
 ```
 
@@ -114,7 +114,7 @@ Provides professional weather services including:
 
 Configure:
 
-```env
+```.env.example
 XWEATHER_CLIENT_ID=your_client_id
 XWEATHER_CLIENT_SECRET=your_client_secret
 ```
@@ -133,7 +133,7 @@ Options:
 
 If access is granted:
 
-```env
+```.env.example
 FLIGHTRADAR24_API_KEY=your_api_key
 ```
 
@@ -143,7 +143,7 @@ For development, the mock provider should remain enabled.
 
 ## Example `.env`
 
-```env
+```.env.example
 # Weather Underground
 WEATHERUNDERGROUND_API_KEY=
 WEATHERUNDERGROUND_STATION_ID=
