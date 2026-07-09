@@ -10,6 +10,158 @@ FireRisk is a modular foundation for wildfire/rural-fire situational awareness a
 - Map: MapLibre GL loaded from CDN with a visible fallback if map assets or styles fail.
 - Dependencies: none at runtime or install time.
 
+  ## API Credentials
+
+FireRisk is designed to work with multiple external data providers. All credentials must be stored only in the local `.env` file and never committed to source control.
+
+### Weather Underground
+
+Provides Personal Weather Station (PWS) observations.
+
+1. Create a Weather Underground account.
+2. Register a Personal Weather Station (or obtain access to an existing one).
+3. Subscribe to the Weather Underground API (if required for your account).
+4. Generate an API Key from your Weather Underground developer account.
+5. Configure:
+
+```env
+WEATHERUNDERGROUND_API_KEY=your_api_key
+WEATHERUNDERGROUND_STATION_ID=your_station_id
+```
+
+---
+
+### IPMA
+
+The Instituto Português do Mar e da Atmosfera publishes several public datasets.
+
+Most observation and forecast endpoints do **not** require authentication.
+
+Useful services include:
+
+- Weather observations
+- Forecasts
+- Warnings
+- Radar
+- Seismic information
+
+If IPMA introduces authenticated services in the future, obtain credentials through the official IPMA developer or data portal.
+
+Configuration example:
+
+```env
+IPMA_BASE_URL=https://api.ipma.pt/open-data/
+```
+
+---
+
+### NASA FIRMS / MODIS
+
+FireRisk uses NASA FIRMS hotspot data (MODIS and VIIRS).
+
+1. Create a NASA Earthdata account.
+2. Log in to the FIRMS portal.
+3. Generate a FIRMS Map Key.
+4. Configure:
+
+```env
+FIRMS_MAP_KEY=your_firms_map_key
+```
+
+The same key provides access to:
+
+- MODIS hotspots
+- VIIRS hotspots
+- FIRMS Area API
+- FIRMS Map API
+
+---
+
+### ICNF
+
+The Instituto da Conservação da Natureza e das Florestas currently publishes several datasets through public services.
+
+If public endpoints are available, authentication is not normally required.
+
+If restricted services are needed:
+
+1. Contact ICNF.
+2. Request API or data access.
+3. Configure the endpoint:
+
+```env
+ICNF_OCCURRENCES_URL=https://...
+```
+
+---
+
+### Xweather (formerly AerisWeather)
+
+Provides professional weather services including:
+
+- Current observations
+- Hourly forecasts
+- Daily forecasts
+- Lightning
+- Alerts
+
+1. Create an Xweather developer account.
+2. Create a new application.
+3. Obtain:
+
+- Client ID
+- Client Secret
+
+Configure:
+
+```env
+XWEATHER_CLIENT_ID=your_client_id
+XWEATHER_CLIENT_SECRET=your_client_secret
+```
+
+---
+
+### Flightradar24
+
+Flightradar24 does **not** provide a free public API.
+
+Options:
+
+- Apply for commercial API access.
+- Obtain an Enterprise agreement.
+- Use another ADS-B provider (recommended for development).
+
+If access is granted:
+
+```env
+FLIGHTRADAR24_API_KEY=your_api_key
+```
+
+For development, the mock provider should remain enabled.
+
+---
+
+## Example `.env`
+
+```env
+# Weather Underground
+WEATHERUNDERGROUND_API_KEY=
+WEATHERUNDERGROUND_STATION_ID=
+
+# NASA FIRMS
+FIRMS_MAP_KEY=
+
+# Xweather
+XWEATHER_CLIENT_ID=
+XWEATHER_CLIENT_SECRET=
+
+# ICNF
+ICNF_OCCURRENCES_URL=
+
+# FlightRadar24
+FLIGHTRADAR24_API_KEY=
+```
+
 ## Local Setup On Windows
 
 ```powershell
