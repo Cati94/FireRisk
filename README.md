@@ -1,6 +1,15 @@
 # FireRisk
 
-FireRisk is a modular foundation for wildfire/rural-fire situational awareness and decision-support work. This repository now contains the Phase 0/1 base: a small local Node app, resilient provider abstractions, mock data, internal API endpoints, and the original Codex handoff prompts/contracts.
+FireRisk is a modular foundation for wildfire/rural-fire situational awareness and decision-support work. This repository reflects the final delivered state of the Codex handoff plan (`codex_manifest.json`), covering Phases 0 through 7: a local Node app, resilient provider abstractions, mock data, internal API endpoints, a heuristic propagation simulator, advisory decision support, a pluggable AI model adapter, post-fire/prevention modules, and hardening (tests, degraded-mode handling, structured logging).
+
+All functionality currently runs against mock/heuristic data. No live provider credentials, calibrated fire-behavior models, or persistence layer are included in this delivery — see [Known Limitations](#known-limitations).
+
+## Delivery
+
+- **Tag:** `v0.1.0`
+- **Delivery commit message:** `chore: entrega final da Fase 0-7 (foundation, providers, simulação, decisão, IA, pós-incêndio, prevenção)`. Run `git rev-parse v0.1.0` for the exact commit hash — it is not hardcoded here to avoid staleness whenever this file itself changes.
+- **`package.json` version:** `0.1.0`
+- **Verified with:** Node.js `v22.22.2`; `npm test` and `npm run build` both passing (8/8 tests, foundation check OK) at delivery time.
 
 ## Stack
 
@@ -8,161 +17,17 @@ FireRisk is a modular foundation for wildfire/rural-fire situational awareness a
 - Package manager: npm.
 - Frontend: static HTML/CSS/JavaScript served by the local Node server.
 - Map: MapLibre GL loaded from CDN with a visible fallback if map assets or styles fail.
-- Dependencies: none at runtime or install time.
 
-  ## API Credentials
+## Dependencies
 
-FireRisk is designed to work with multiple external data providers. All credentials must be stored only in the local `.env` file and never committed to source control.
+- Runtime dependencies: **none**. `package-lock.json` has no `dependencies`/`devDependencies` entries — the app runs entirely on Node's built-ins (native ESM, `fetch`, `node:test`, `node:http`).
+- `npm install` is still required once to generate `node_modules` (empty) and validate the lockfile; no packages are downloaded.
+- Frontend: plain HTML/CSS/JS in `public/`, no bundler or build step.
+- MapLibre GL is loaded from a CDN at runtime (see [Map Behavior](#map-behavior)); it is not vendored into the repo.
 
-### Weather Underground
+## Local Setup
 
-Provides Personal Weather Station (PWS) observations.
-
-1. Create a Weather Underground account.
-2. Register a Personal Weather Station (or obtain access to an existing one).
-3. Subscribe to the Weather Underground API (if required for your account).
-4. Generate an API Key from your Weather Underground developer account.
-5. Configure:
-
-```.env.example
-WEATHERUNDERGROUND_API_KEY=your_api_key
-WEATHERUNDERGROUND_STATION_ID=your_station_id
-```
-
----
-
-### IPMA
-
-The Instituto Português do Mar e da Atmosfera publishes several public datasets.
-
-Most observation and forecast endpoints do **not** require authentication.
-
-Useful services include:
-
-- Weather observations
-- Forecasts
-- Warnings
-- Radar
-- Seismic information
-
-If IPMA introduces authenticated services in the future, obtain credentials through the official IPMA developer or data portal.
-
-Configuration example:
-
-```.env.example
-IPMA_BASE_URL=https://api.ipma.pt/open-data/
-```
-
----
-
-### NASA FIRMS / MODIS
-
-FireRisk uses NASA FIRMS hotspot data (MODIS and VIIRS).
-
-1. Create a NASA Earthdata account.
-2. Log in to the FIRMS portal.
-3. Generate a FIRMS Map Key.
-4. Configure:
-
-```.env.example
-FIRMS_MAP_KEY=your_firms_map_key
-```
-
-The same key provides access to:
-
-- MODIS hotspots
-- VIIRS hotspots
-- FIRMS Area API
-- FIRMS Map API
-
----
-
-### ICNF
-
-The Instituto da Conservação da Natureza e das Florestas currently publishes several datasets through public services.
-
-If public endpoints are available, authentication is not normally required.
-
-If restricted services are needed:
-
-1. Contact ICNF.
-2. Request API or data access.
-3. Configure the endpoint:
-
-```.env.example
-ICNF_OCCURRENCES_URL=https://...
-```
-
----
-
-### Xweather (formerly AerisWeather)
-
-Provides professional weather services including:
-
-- Current observations
-- Hourly forecasts
-- Daily forecasts
-- Lightning
-- Alerts
-
-1. Create an Xweather developer account.
-2. Create a new application.
-3. Obtain:
-
-- Client ID
-- Client Secret
-
-Configure:
-
-```.env.example
-XWEATHER_CLIENT_ID=your_client_id
-XWEATHER_CLIENT_SECRET=your_client_secret
-```
-
----
-
-### Flightradar24
-
-Flightradar24 does **not** provide a free public API.
-
-Options:
-
-- Apply for commercial API access.
-- Obtain an Enterprise agreement.
-- Use another ADS-B provider (recommended for development).
-
-If access is granted:
-
-```.env.example
-FLIGHTRADAR24_API_KEY=your_api_key
-```
-
-For development, the mock provider should remain enabled.
-
----
-
-## Example `.env`
-
-```.env.example
-# Weather Underground
-WEATHERUNDERGROUND_API_KEY=
-WEATHERUNDERGROUND_STATION_ID=
-
-# NASA FIRMS
-FIRMS_MAP_KEY=
-
-# Xweather
-XWEATHER_CLIENT_ID=
-XWEATHER_CLIENT_SECRET=
-
-# ICNF
-ICNF_OCCURRENCES_URL=
-
-# FlightRadar24
-FLIGHTRADAR24_API_KEY=
-```
-
-## Local Setup On Windows
+Windows (PowerShell):
 
 ```powershell
 npm install
@@ -170,21 +35,29 @@ Copy-Item .env.example .env
 npm run dev
 ```
 
+macOS/Linux:
+
+```bash
+npm install
+cp .env.example .env
+npm run dev
+```
+
 Open `http://localhost:5173`.
 
 If port `5173` is busy, set `PORT` in `.env`:
 
-```powershell
+```
 PORT=5174
 ```
 
 ## Scripts
 
-- `npm run install:check` checks that Node is available.
-- `npm run dev` starts the local server.
-- `npm start` starts the same local server.
-- `npm test` runs the minimum Node test suite.
-- `npm run build` runs the foundation sanity check and tests.
+- `npm run install:check` — checks that Node is available (`node --version`).
+- `npm run dev` — starts the local server (`node src/server.mjs`).
+- `npm start` — starts the same local server as `dev`.
+- `npm test` — runs the Node test suite (`node --test`) against `test/foundation.test.mjs`.
+- `npm run build` — runs the foundation sanity check (`src/check.mjs`) and then the test suite; this is the command used to validate this delivery.
 
 ## Environment
 
@@ -356,7 +229,7 @@ The prevention output includes:
 
 `GET /api/postfire` and `GET /api/prevention` list recent in-memory snapshots.
 
-## Hardening And Validation
+## Tests And Hardening
 
 Minimum checks:
 
@@ -364,6 +237,19 @@ Minimum checks:
 npm test
 npm run build
 ```
+
+`test/foundation.test.mjs` covers 8 cases across the mock fixtures and the core engines, all passing as of this delivery:
+
+- provider mock fixture sanity (`test/fixtures/mock-context.mjs`)
+- `ICNFProvider` normalization of location-based mock occurrences
+- `FIRMSProvider` preservation of decimal confidence and coordinates
+- provider `fetchJson` reporting invalid JSON without throwing raw syntax errors
+- `FireBehaviorEngine` lowering confidence when fuel/terrain data is missing
+- `PropagationSimulator` producing a valid perimeter, uncertainty, direction, and fronts
+- `DecisionSupportEngine` producing advisory recommendations with missing-data flags
+- `MockAIModelAdapter` returning assistive uncertainty and recommendations
+
+There is no coverage yet for `src/server.mjs` HTTP routing, `src/postfire`, `src/prevention`, `WeatherUndergroundProvider`, or `XWeatherProvider` beyond manual/mock-mode exercise — see [Known Limitations](#known-limitations).
 
 Additional validation endpoints:
 
@@ -375,13 +261,16 @@ Structured logs are emitted as JSON lines by the local server. Use `FIRERISK_LOG
 
 ## Known Limitations
 
-- All analysis is mock-first and heuristic until real provider credentials and validation datasets are supplied.
-- Fire spread, post-fire severity, erosion, runoff, prevention priorities, and AI output are not calibrated scientific predictions.
+- All analysis is mock-first and heuristic until real provider credentials and validation datasets are supplied; `FIRERISK_ENABLE_MOCKS=true` is the default.
+- Fire spread, post-fire severity, erosion, runoff, prevention priorities, and AI output are not calibrated scientific predictions — they are transparent heuristics meant to be reviewed by a human.
 - No operational orders are generated; outputs are analytical support with confidence, assumptions, warnings, and missing data.
-- Snapshots are in memory only and reset when the Node process restarts.
-- GeoJSON export endpoints return JSON payloads now; file download/PDF/CSV export is prepared but not implemented.
-- Replay uses generated mock frames, not observed historical incident progression.
-- MapLibre is loaded from a CDN, so offline browser sessions show the map fallback while APIs continue to work.
+- Snapshots (simulation, decision, post-fire, prevention) are held in memory only (`*-store.mjs` modules) and reset when the Node process restarts. There is no database or file persistence layer.
+- `WeatherUndergroundProvider` and `XWeatherProvider` are implemented against their documented APIs but have not been validated against live credentials in this delivery; they fall back to mock/degraded behavior without keys.
+- `GET /api/exports/geojson` returns JSON payloads; file download/PDF/CSV export is prepared (see `docs/DATA_SOURCES.md`) but not implemented.
+- `GET /api/replay/mock` uses generated mock frames, not observed historical incident progression.
+- MapLibre is loaded from a CDN, so offline browser sessions show the map fallback while the internal APIs continue to work.
+- Automated test coverage is limited to the core providers/engines (see [Tests And Hardening](#tests-and-hardening)); `src/server.mjs` routing and the post-fire/prevention engines are only exercised manually.
+- Contracts in `contracts/*.ts` are TypeScript type definitions used as documentation/reference; the runtime code is plain JavaScript (`.mjs`) and is not type-checked against them by a build step.
 
 ## Map Behavior
 
@@ -389,16 +278,11 @@ The first screen is the operational map with provider, weather, simulation, deci
 
 ## Original Handoff Package
 
-The original planning assets remain available:
+The Codex handoff assets that shipped in this delivery:
 
-- `prompts/00_MASTER_PROMPT.md`
-- `prompts/01_PHASE_0_1_FOUNDATION.md`
-- `prompts/02_PHASE_2_WEATHER.md`
-- `prompts/03_PHASE_3_SIMULATION.md`
-- `prompts/04_PHASE_4_DECISION_SUPPORT.md`
-- `prompts/05_PHASE_5_AI_MODEL.md`
-- `prompts/06_PHASE_6_POSTFIRE_PREVENTION.md`
-- `prompts/07_REVIEW_AND_HARDENING.md`
-- `docs/`
-- `contracts/`
-- `templates/`
+- `codex_manifest.json` — phase list, rules, and recommended execution order.
+- `docs/ARCHITECTURE.md`, `docs/DATA_SOURCES.md`, `docs/ACCEPTANCE_CRITERIA.md`, `docs/SAFETY_AND_DECISION_POLICY.md`, `docs/IMPLEMENTATION_NOTES.md`.
+- `contracts/provider-contract.ts`, `contracts/ai-model-contract.ts`, `contracts/firerisk-types.ts`.
+- `templates/CODEX_HANDOFF.md`, `templates/.env.example`.
+
+Note: `codex_manifest.json` points to a `prompts/00_MASTER_PROMPT.md` ... `prompts/07_REVIEW_AND_HARDENING.md` series as the recommended per-phase execution prompts; that `prompts/` directory is **not included** in this repository. If those prompts are needed for future work, they should be sourced separately and added under `prompts/`.
